@@ -43,6 +43,13 @@ export const Form = styled.form`
     > div:nth-child(5) {
         margin-bottom: 1.6rem ;
     }
+
+    > a {
+        display: flex;
+        align-items: center;
+        justify-content: center ;
+        margin-top: 4.2rem;
+    }
 `;
 
 export const Background = styled.div`

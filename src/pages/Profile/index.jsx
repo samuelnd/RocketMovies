@@ -5,12 +5,13 @@ import{ButtonText} from "../../components/ButtonText";
 
 
 import {Container, Form, Avatar} from "./styles";
+import { Link } from "react-router-dom";
 
 export function Profile() {
     return (
         <Container>
             <header>
-                <a href="/"><FiArrowLeft /> Voltar</a>
+                <Link to="/"><FiArrowLeft /> Voltar</Link>
             </header>
 
             <Form>

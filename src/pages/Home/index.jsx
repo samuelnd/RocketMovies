@@ -4,6 +4,7 @@ import { Header} from "../../components/Header";
 import { Section } from "../../components/Section";
 import { Tags } from "../../components/Tags";
 import { GrAdd } from "react-icons/gr";
+import { Link } from "react-router-dom";
 
 
 export function Home() {
@@ -15,7 +16,7 @@ export function Home() {
             <Content>
                 <div>
                     <h1>Meus Filmes</h1>
-                    <a href="#"> < GrAdd/> Adicionar filme</a>
+                    <Link to="/new"> < GrAdd/> Adicionar filme</Link>
                 </div>
 
                 <Section 
