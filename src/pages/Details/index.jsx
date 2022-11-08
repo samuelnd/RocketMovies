@@ -3,15 +3,54 @@ import {FiArrowLeft} from  "react-icons/fi";
 
 import {Header} from "../../components/Header";
 import {Tags} from "../../components/Tags";
+import {Input} from "../../components/Input";
+import { ButtonText } from "../../components/ButtonText";
+
+import { useEffect, useState } from "react";
+
+import { useAuth } from "../../hooks/auth";
+import { api } from "../../services/api";
+
+import { useParams, useNavigate } from "react-router-dom";
 
 export function Details(){
+    const [data, setData]= useState([]);
+
+    const {user} = useAuth();
+
+    const params = useParams();
+    const navigate = useNavigate();
+
+    const avatarURL = user.avatar ? `${api.defaults.baseURL}/files/${user.avatar}` : avatarPlaceholder;
+
+    async function handleRemove() {
+        const confirm = window.confirm("Deseja realmente excluir esse filme da sua lista? ");
+
+        if (confirm) {
+            await api.delete(`/movies/${params.id}`);
+            navigate(-1);
+        }
+    }
+
+    useEffect(() => {
+        async function fetchDetails() {
+            const response = await api.get(`/movies/${params.id}`);
+            setData(response.data);
+        }
+
+        fetchDetails();
+    }, [data]);
+
     return(
         <>
-            <Header />
+            <Header>
+                <Input 
+                placeholder="Pesquisar pelo Título"/>
+            </Header>
             <Container>
                 <a href="/"><FiArrowLeft /> Voltar</a>
                 <h1>
-                    Interestellar 
+                    {data.title} 
                     <svg 
                     width="141" height="21" viewBox="0 0 141 21" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M15.8748 19.2503C15.7433 19.2508 15.6149 19.2098 15.508 19.1331L10.4842 15.4909L5.46037 19.1331C5.35304 19.211 5.22373 19.2526 5.09114 19.2522C4.95855 19.2517 4.82955 19.209 4.72279 19.1304C4.61603 19.0518 4.53704 18.9413 4.49724 18.8148C4.45744 18.6883 4.45889 18.5525 4.50138 18.4269L6.46076 12.6233L1.38264 9.14092C1.27264 9.06557 1.18962 8.95702 1.14571 8.83113C1.1018 8.70524 1.0993 8.56861 1.13857 8.4412C1.17784 8.31379 1.25682 8.20227 1.36399 8.12294C1.47115 8.04362 1.60087 8.00064 1.7342 8.00029H7.99904L9.88967 2.18193C9.93039 2.05632 10.0099 1.94683 10.1167 1.86917C10.2235 1.79152 10.3521 1.74969 10.4842 1.74969C10.6163 1.74969 10.7449 1.79152 10.8517 1.86917C10.9585 1.94683 11.038 2.05632 11.0787 2.18193L12.9694 8.00224H19.2342C19.3677 8.00218 19.4977 8.04486 19.6052 8.12403C19.7127 8.2032 19.792 8.31471 19.8315 8.44222C19.871 8.56973 19.8687 8.70654 19.8248 8.83262C19.7809 8.9587 19.6978 9.06743 19.5877 9.14287L14.5076 12.6233L16.4658 18.4253C16.4976 18.5192 16.5065 18.6194 16.4919 18.7174C16.4773 18.8155 16.4395 18.9087 16.3818 18.9893C16.324 19.0699 16.248 19.1356 16.1598 19.181C16.0717 19.2263 15.974 19.2501 15.8748 19.2503Z" fill="#FF859B"/>
@@ -22,42 +61,42 @@ export function Details(){
                     </svg>
                 </h1>
                 <div>
-                    <img src="http://github.com/samuelnd.png" alt="Imagem de perfil" />
-                    <span> Por Samuel Nunes </span>
+                    <img src={avatarURL} alt="Imagem de perfil" />
+                    <span> Por {user.name} </span>
                     <svg
                         width="17" height="17" viewBox="0 0 17 17" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M8.48904 1.73077C4.94261 1.73077 2.06767 4.76146 2.06767 8.5C2.06767 12.2385 4.94261 15.2692 8.48904 15.2692C12.0355 15.2692 14.9104 12.2385 14.9104 8.5C14.9104 4.76146 12.0355 1.73077 8.48904 1.73077ZM0.900146 8.5C0.900146 4.08172 4.29781 0.5 8.48904 0.5C12.6803 0.5 16.0779 4.08172 16.0779 8.5C16.0779 12.9183 12.6803 16.5 8.48904 16.5C4.29781 16.5 0.900146 12.9183 0.900146 8.5Z" fill="#FF859B"/>
                         <path fill-rule="evenodd" clip-rule="evenodd" d="M8.48904 3.57692C8.81144 3.57692 9.0728 3.85244 9.0728 4.19231V7.88462H12.5754C12.8978 7.88462 13.1591 8.16013 13.1591 8.5C13.1591 8.83987 12.8978 9.11539 12.5754 9.11539H8.48904C8.16663 9.11539 7.90527 8.83987 7.90527 8.5V4.19231C7.90527 3.85244 8.16663 3.57692 8.48904 3.57692Z" fill="#FF859B"/>
                     </svg>
-                    <strong>25/07/22 às 21:00</strong>
+                    <strong>{data.created_at} </strong>
                 </div>
                 
-                <Tags title="Ficção Científica" />
-                <Tags title="Drama" />
-                <Tags title="Família" />
+                
+                    {data.tags && 
+                    <div className="tags">
+                        { data.tags.map(tag => (
+                        <Tags 
+                        key={tag.id} 
+                        title={tag.name} 
+                        />
+                        ))}
+                    </div>
+                    }
                 
                 <Content>
                     <p>
-                    Pragas nas colheitas fizeram a civilização humana regredir para uma sociedade agrária 
-                    em futuro de data desconhecida. Cooper, ex-piloto da NASA, tem uma fazenda com sua 
-                    família. Murphy, a filha de dez anos de Cooper, acredita que seu quarto está assombrado 
-                    por um fantasma que tenta se comunicar com ela. Pai e filha descobrem que o "fantasma"
-                     é uma inteligência desconhecida que está enviando mensagens codificadas através de radiação gravitacional, 
-                     deixando coordenadas em binário que os levam até 
-                    uma instalação secreta da NASA liderada pelo professor John Brand. O cientista revela que um buraco de minhoca 
-                    foi aberto perto de Saturno e que ele leva a planetas que podem oferecer condições de sobrevivência para a espécie humana. 
-                    As "missões Lázaro" enviadas anos antes identificaram três planetas potencialmente habitáveis orbitando o buraco negro Gargântua: 
-                    Miller, Edmunds e Mann – nomeados em homenagem aos astronautas que os pesquisaram. Brand recruta Cooper para pilotar a nave espacial 
-                    Endurance e recuperar os dados dos astronautas; se um dos planetas se mostrar habitável, a humanidade irá seguir para ele na 
-                    instalação da NASA, que é na realidade uma enorme estação espacial. A partida de Cooper devasta Murphy. <br />
-                    <br />
-                    Além de Cooper, a tripulação da Endurance é formada pela bióloga Amelia, filha de Brand; o cientista Romilly, o físico planetário Doyle, 
-                    além dos robôs TARS e CASE. Eles entram no buraco de minhoca e se dirigem a Miller, porém descobrem que o planeta possui enorme dilatação 
-                    gravitacional temporal por estar tão perto de Gargântua: cada hora na superfície equivale a sete anos na Terra. Eles entram em Miller e 
-                    descobrem que é inóspito já que é coberto por um oceano raso e agitado por ondas enormes. Uma onda atinge a tripulação enquanto Amelia tenta r
-                    ecuperar os dados de Miller, matando Doyle e atrasando a partida. Ao voltarem para a Endurance, Cooper e Amelia descobrem que 23 anos se passaram.
+                    {data.description}
                     </p>
+
                 </Content>
+
+                <div className="deleteMovie">
+                <ButtonText 
+                title="Excluir filme" 
+                onClick={handleRemove}
+                />
+                </div>
+
 
             </Container>
         </>

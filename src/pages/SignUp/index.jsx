@@ -38,7 +38,6 @@ export function SignUp() {
         
     }
 
-
     return(
         <Container>
             

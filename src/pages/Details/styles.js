@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Container = styled.div`
+export const Container = styled.section`
 
     width: 100%;
     padding: 0 25rem;
@@ -13,7 +13,11 @@ export const Container = styled.div`
         gap: 1rem;
         font-size: 1.6rem;
 
-        margin: 2.4rem 0 4rem;
+        margin: 2.4rem 0 2rem;
+    }
+
+    .tags {
+        margin-top: 0;
     }
 
     img {
@@ -28,6 +32,10 @@ export const Container = styled.div`
         display: flex;
         align-items: center;
         gap: 1.9rem;
+    }
+
+    .deleteMovie {
+        width: 35rem;
     }
 `;
 

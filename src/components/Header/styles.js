@@ -25,7 +25,7 @@ export const Container = styled.header`
     }
 `;
 
-export const Profile = styled(Link)`
+export const Profile = styled.div`
     display: flex;
     align-items: center;
     gap: .9rem;
@@ -35,6 +35,8 @@ export const Profile = styled(Link)`
         height: 6.4rem;
         border-radius: 50%;
         border: 2px solid ${({theme}) => theme.COLORS.COLOR_TEXT};
+
+        cursor: pointer;
     }
 
     > div {
